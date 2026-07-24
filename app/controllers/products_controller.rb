@@ -4,6 +4,7 @@ class ProductsController < ApplicationController
     @product = Product.new
   end
   # フォームから送られたデータを元に新しい商品を作成
+  def create
     @product = Product.new(product_params)
     
       # データをデータベースに保存する
@@ -15,6 +16,37 @@ class ProductsController < ApplicationController
         render :new, status: :unprocessable_entity
       end
     end
+
+    def index
+      @products = Product.all
+    end
+
+    def show
+      @product = Product.find(params[:id])
+    end
+
+    def edit
+    @product = Product.find(params[:id])
+  end
+
+  # 商品更新
+  def update
+    @product = Product.find(params[:id])
+    if @product.update(product_params)
+      # 商品詳細にリダイレクト
+      redirect_to product_path 
+    else
+      # 失敗時に編集画面に戻る
+      render :edit  
+    end
+  end
+
+  def destroy
+    @product = Product.find(params[:id])
+    @product.destroy
+    # 商品一覧にリダイレクト
+    redirect_to products_path
+  end
 
     private
 
